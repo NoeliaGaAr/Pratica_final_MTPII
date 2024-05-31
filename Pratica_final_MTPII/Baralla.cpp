@@ -41,19 +41,23 @@ void Baralla::afegir_carta(Carta c) {
 }
 
 void Baralla::barreja() {
-
-    for (int i = a_n - 1; i > 0; i--) {
+    for (int i = a_n - 1; i > 0; --i) {
         int pos = aleatori(i + 1);
         intercanviar(cartes[pos], cartes[i]);
     }
 }
 
-int Baralla::aleatori(int N) 
-{
-    int aleatori = (((FISHER_YATES_A * Xn + FISHER_YATES_C) / 32) % FISHER_YATES_M) % N;
-    Xn = FISHER_YATES_A * Xn + FISHER_YATES_C;
-    return aleatori;
+int Baralla::aleatori(int N) {
+    Xn = 1103515245 * Xn + 12345;
+    return ((Xn / 32) % 32768) % N;
 }
+
+//int Baralla::aleatori(int N) 
+//{
+//    int aleatori = (((FISHER_YATES_A * Xn + FISHER_YATES_C) / 32) % FISHER_YATES_M) % N;
+//    Xn = FISHER_YATES_A * Xn + FISHER_YATES_C;
+//    return aleatori;
+//}
 
 void Baralla::mostra_baralla() const {
     cout << "BARALLA" << endl;
@@ -109,10 +113,10 @@ void Baralla::crear_baralla()
 {
     char pals[4] = { 'P', 'c', 'd', 'T' };
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         char pal = pals[i];
-        for (int valor = 0; valor < 13; valor++)
+        for (int valor = 1; valor < 14; valor++)
         {
             Carta c(pal, valor, false);
             afegir_carta(c);

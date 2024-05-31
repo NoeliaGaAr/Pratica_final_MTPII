@@ -14,10 +14,10 @@ public:
     ~PilaCartes();
 
     bool buida() const;
-    Carta* cim() const;
+    Carta cim() const;
 
     void empila(Carta c);
-    void desempila();
+    Carta desempila();
     void mostrar() const;
     PilaCartes& operator=(const PilaCartes& o);
 

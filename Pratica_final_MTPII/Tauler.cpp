@@ -1,5 +1,6 @@
 #include "Tauler.h"
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 
 using namespace std;
@@ -67,24 +68,27 @@ void Tauler::repartir(Baralla& baralla) {
     }
 }*/
 
-void Tauler::mostra_tauler() const 
+void Tauler::mostra_tauler() const
 {
+    // TODO: Fa un espai extra entre "Qc **", fa "Qc  **" i no hauria.
+     
     // Mostrar estat del joc
-    cout << "ESTAT DEL JOC" << endl;
-    cout << "               **" << endl; // TODO: Fer en iomanip
+    cout << "               **" << endl;
     cout << "c1 c2 c3 c4 c5 c6 c7" << endl;
+
     // Recorrem totes les files (0..files-1)
     for (int fila = 0; fila < files; fila++)
     {
         // Mostrem un espai quan canviem de fila, relatiu a aquesta
         for (int espais = 0; espais < fila; espais++) {
-            cout << "   ";
+            cout << "   "; // tres espais per desplaçar la fila
         }
+
         // Recorrem les columnes (fila..columnes-1)
         for (int col = fila; col < columnes; col++)
         {
             // Si NO tenim una carta a la casella...
-            if (not taula[fila][col].es_visible())
+            if (!taula[fila][col].es_visible())
             {
                 // Mostrem "**"
                 cout << "**";
@@ -96,40 +100,16 @@ void Tauler::mostra_tauler() const
                 taula[fila][col].mostrar();
             }
             // Mostrem un espai de separació (independentment del que fem)
-            cout << " ";
+            if (col < columnes - 1) cout << " ";
         }
+
         // Mostrem la fila a la que estem
-        cout << "f" << fila + 1 << endl;
+        cout << " f" << fila + 1 << endl;
     }
-        /*cout << "ESTAT DEL JOC" << endl << endl;
-                cout << "               **" << endl;
-
-                // Imprimir la capçalera de les columnes
-                cout << "    ";
-                for (int i = 0; i < columnes; ++i) {
-                    cout << "c" << i + 1 << " ";
-                }
-                cout << endl;
-
-                // Imprimir les cartes del tauler
-                for (int fila = 0; fila < files; ++fila) {
-                    for (int col = 0; col < columnes; ++col) {
-                        if (col == 0) {
-                            cout << " ";
-                        }
-                        if (taula[fila][col].tenir_carta()) {
-                            taula[fila][col].mostrar();
-                        } else {
-                            cout << "   ";
-                        }
-                        cout << " ";
-                    }
-                    cout << "f" << fila + 1 << endl;
-                }*/
 }
 
 void Tauler::allibera() {
-    for (int i = 0; i < files; ++i) {
+    for (int i = 0; i < files; i++) {
         delete[] taula[i];
     }
     delete[] taula;
@@ -137,7 +117,7 @@ void Tauler::allibera() {
 
 void Tauler::reserva() {
     taula = new Carta * [files];
-    for (int i = 0; i < files; ++i) {
+    for (int i = 0; i < files; i++) {
         taula[i] = new Carta[columnes];
     }
 }
@@ -166,13 +146,13 @@ void Tauler::copia(const Tauler& t) {
 
     // Reservem memòria per la nova matriu de cartes
     taula = new Carta * [files];
-    for (int i = 0; i < files; ++i) {
+    for (int i = 0; i < files; i++) {
         taula[i] = new Carta[columnes];
     }
 
     // Copiem les cartes de la taula original a la nova taula
-    for (int fila = 0; fila < files; ++fila) {
-        for (int col = 0; col < columnes; ++col) {
+    for (int fila = 0; fila < files; fila++) {
+        for (int col = 0; col < columnes; col++) {
             taula[fila][col] = Carta((t.taula[fila][col]));
         }
     }

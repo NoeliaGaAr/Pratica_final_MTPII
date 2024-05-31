@@ -17,6 +17,7 @@ public:
     bool es_visible() const;
     bool tenim_carta() const;
     void mostrar();
+    void mostrar_debug() const;
 
 private:
     char a_pal;

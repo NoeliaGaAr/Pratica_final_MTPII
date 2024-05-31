@@ -51,6 +51,11 @@ void Carta::mostrar()
     }
 }
 
+void Carta::mostrar_debug() const
+{
+    cout << "(" << a_pal << "," << a_valor << ")";
+}
+
 char Carta::pal_a_char(char pal) {
     if (pal == 'P') {
         return 'P';

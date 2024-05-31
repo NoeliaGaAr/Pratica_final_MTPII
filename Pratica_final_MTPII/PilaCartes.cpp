@@ -19,12 +19,12 @@ bool PilaCartes::buida() const {
     return a_cim == NULL;
 }
 
-Carta* PilaCartes::cim() const {
+Carta PilaCartes::cim() const {
     //return a_cim->valor;
     if (!buida()) {
-        return a_cim->valor;
+        return *(a_cim->valor);
     }
-    else { return NULL; }
+    //else { return NULL; }
 
 }
 
@@ -35,11 +35,13 @@ void PilaCartes::empila(Carta c) {
     a_cim = nou;
 }
 
-void PilaCartes::desempila() {
+Carta PilaCartes::desempila() {
+    Carta carta = *(a_cim->valor);
     if (!buida()) {
         Node* aux = a_cim;
         a_cim = a_cim->seg;
         delete aux;
+        return carta;
     }
 }
 

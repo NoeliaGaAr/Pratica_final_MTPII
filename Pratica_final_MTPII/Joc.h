@@ -13,9 +13,12 @@ public:
     Joc& operator=(const Joc& other);
 
     //void repartirCartes();
-    void inicialitzarJoc();
-    void mostraEstat() const;
+    void inicialitzar_joc();
+    void mostra_estat() const;
 
+    void obrir_una_carta();
+    void posar_cartaMa_tauler(int columnaDesti);
+    void posar_cartaMa_pila();
 private:
     Baralla* a_baralla;
     PilaCartes* a_ma;

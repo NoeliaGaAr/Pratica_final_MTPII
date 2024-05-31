@@ -20,7 +20,7 @@ Joc::~Joc() {
     }
 }
 
-void Joc::inicialitzarJoc() 
+void Joc::inicialitzar_joc() 
 {
     // Pas 1: Barrejem la baralla
     a_baralla->barreja();
@@ -34,9 +34,10 @@ void Joc::inicialitzarJoc()
     }
 }
 
-void Joc::mostraEstat() const {
+void Joc::mostra_estat() const {
     cout << "ESTAT DEL JOC" << endl << endl;
-    cout << "Ma: " << a_ma->cim() << "  Descartades: " << a_descartades->cim() << endl;
+    //cout << "Ma: "; a_ma->cim().mostrar(); 
+    //cout << "Descartades: "; a_descartades->cim().mostrar();
     a_tauler->mostra_tauler();
 
     cout << "JOC EN CURS" << endl;
@@ -44,18 +45,113 @@ void Joc::mostraEstat() const {
 
 void Joc::emplenar_tauler()
 {
-    // TODO:
-    // Fer que Joc distribueixi les fitxes pel tauler.
-    // Tauler només ha de posar o treure les fitxes. (posar_carta -> a_tauler.posar_carta(..))
+    // Nombres de columnes i files
+    int n_col = a_tauler->n_columnes();
+    int n_fil = a_tauler->n_files();
 
-    for (int i = 0; i < a_tauler->n_columnes(); i++)
+    // Per cada columna
+    for (int i = 0; i < n_col; i++)
     {
-        for (int j = 0; j < a_tauler->n_files(); j++)
+        // Per cada fila dins de la columna, fins la fila i+1 (per limitar les files per columna)
+        for (int j = 0; j <= i && j < n_fil; j++)
         {
+            // Agafa una carta de la baralla
             Carta c = a_baralla->agafa_carta();
-            if (i == j) c.revelar();
-            a_tauler->posar_carta(i, j, c);
+            
+            // Revela la carta si és l'última de la columna (fila més baixa)
+            if (j == i)
+                c.revelar();
+
+            // Col·loca la carta al tauler
+            a_tauler->posar_carta(j, i, c);
+
+            // Debugging
+            c.mostrar_debug();
+            cout << " posada a columna " << i+1 << ", fila " << j+1 << endl;
         }
+    }
+}
+
+void Joc::obrir_una_carta() {
+    // Comprovar si hi ha cartes a la mà
+    if (!a_ma->buida()) {
+        // Treure una carta de la mà
+        Carta carta = a_ma->desempila();
+        // Posar la carta sobre la pila de descartades
+        a_descartades->empila(carta);
+        // Revelar la carta
+        carta.revelar();
+        carta.mostrar();
+    }
+    else {
+        // Si la mà està buida, reciclar les cartes de la pila de descartades
+        while (!a_descartades->buida()) {
+            Carta carta = a_descartades->desempila();
+            carta.amagar(); // Amagar les cartes abans de posar-les a la mà
+            a_ma->empila(carta);
+        }
+    }
+}
+
+void Joc::posar_cartaMa_tauler(int columnaDesti) {
+    // Inicialitzem la variable que indicarà si s'ha trobat una carta vàlida per moure.
+    bool cartaValida = false;
+
+    // Comprovem si la pila de descartades té almenys una carta.
+    if (not a_descartades->buida()) {
+        // Obtenim la carta del cim de la pila de descartades.
+        Carta carta = a_descartades->cim();
+
+        // Comprovem si la columna de destí és vàlida.
+        if (columnaDesti >= 0 && columnaDesti < 4) {
+            // Comprovem si la columna de destí està buida o si la carta del cim de la pila de descartades
+            // és compatible amb la carta de la columna de destí.
+            if (piles[columnaDesti]->buida() || piles[columnaDesti]->cim().es_visible() == carta.es_visible() &&
+                piles[columnaDesti]->cim().valor() - carta.valor() == 1) {
+                // Movem la carta de la mà a la columna de destí.
+                piles[columnaDesti]->empila(a_descartades->desempila());
+                cartaValida = true;
+            }
+        }
+    }
+
+    // Si no s'ha trobat cap carta vàlida per moure, mostrem un missatge d'error.
+    if (not cartaValida) {
+        cout << "No es pot moure cap carta de la mà al tauler en aquesta posició." << endl;
+    }
+}
+
+void Joc::posar_cartaMa_pila() {
+    // Comprovem si la pila de descartades té almenys una carta.
+    if (not a_descartades->buida()) {
+        // Obtenim la carta del cim de la pila de descartades.
+        Carta carta = a_descartades->cim();
+
+        // Determinem a quina pila correspon la carta.
+        int pilaDesti = -1;
+        switch (carta.pal()) {
+            case 'P': pilaDesti = 0; break;  // Piques
+            case 'c': pilaDesti = 1; break;  // Cors
+            case 'd': pilaDesti = 2; break;  // Diamants
+            case 'T': pilaDesti = 3; break;  // Trèvols
+            default: break;
+        }
+
+        // Si la carta pertany a una pila vàlida...
+        if (pilaDesti != -1) {
+            // Comprovem si la pila de destí està buida o si la carta del cim de la pila de descartades
+            // és compatible amb la carta de la pila de destí.
+            if (piles[pilaDesti]->buida() || piles[pilaDesti]->cim().valor() - carta.valor() == 1) {
+                // Movem la carta de la mà a la pila de destí.
+                piles[pilaDesti]->empila(a_descartades->desempila());
+            }
+            else {
+                cout << "La carta no pot ser posada a la pila corresponent." << endl;
+            }
+        }
+    }
+    else {
+        cout << "No hi ha cap carta per agafar de la mà per posar a les piles." << endl;
     }
 }
 
