@@ -122,30 +122,43 @@ void Joc::obrir_una_carta() {
 }
 
 void Joc::posar_cartaMa_tauler(int columnaDesti) {
-    // Inicialitzem la variable que indicarà si s'ha trobat una carta vàlida per moure.
-    bool cartaValida = false;
+    // Comprovem si hi ha cartes a la pila de descartades
+    if (a_descartades->buida()) {
+        cout << "No hi ha cap carta a la pila de descartades." << endl;
+    }
+    columnaDesti = columnaDesti - 1;
+    // Obtenim la carta del cim de la pila de descartades
+    Carta carta = a_descartades->cim();
 
-    // Comprovem si la pila de descartades té almenys una carta.
-    if (not a_descartades->buida()) {
-        // Obtenim la carta del cim de la pila de descartades.
-        Carta carta = a_descartades->cim();
-
-        // Comprovem si la columna de destí és vàlida.
-        if (columnaDesti >= 0 && columnaDesti < 4) {
-            // Comprovem si la columna de destí està buida o si la carta del cim de la pila de descartades
-            // és compatible amb la carta de la columna de destí.
-            if (piles[columnaDesti]->buida() || piles[columnaDesti]->cim().es_visible() == carta.es_visible() &&
-                piles[columnaDesti]->cim().valor() - carta.valor() == 1) {
-                // Movem la carta de la mà a la columna de destí.
-                //piles[columnaDesti]->empila(a_descartades->desempila());
-                cartaValida = true;
-            }
-        }
+    // Comprovem si la columna és vàlida
+    if (!a_tauler->columna_valida(columnaDesti)) {
+        cout << "La columna indicada no és vàlida." << endl;
     }
 
-    // Si no s'ha trobat cap carta vàlida per moure, mostrem un missatge d'error.
-    if (not cartaValida) {
-        cout << "No es pot moure cap carta de la mà al tauler en aquesta posició." << endl;
+    // Comprovem si la carta es pot posar a la columna
+    if (a_tauler->columna_buida(columnaDesti)) {
+        // Si la columna està buida, qualsevol carta pot ser-hi posada
+        a_tauler->afegir_carta(columnaDesti, carta);
+        a_descartades->desempila();
+        cout << "Carta posada a la columna." << endl;
+    }
+    else {
+        // Obtenim la carta al cim de la columna indicada
+        Carta cimColumna = a_tauler->cim_columna(columnaDesti);
+
+        // Comprovem si la carta es pot posar a la columna
+        if ((cimColumna.valor() - carta.valor()) == 1 &&
+            ((carta.pal() == 'P' || carta.pal() == 'T') && (cimColumna.pal() == 'c' || cimColumna.pal() == 'd') ||
+                (carta.pal() == 'c' || carta.pal() == 'd') && (cimColumna.pal() == 'P' || cimColumna.pal() == 'T'))) {
+            a_tauler->afegir_carta(columnaDesti, carta);
+            carta.revelar();
+            if (carta.es_visible()) carta.mostrar();
+            a_descartades->desempila();
+            cout << "Carta posada a la columna." << endl;
+        }
+        else {
+            cout << "No es pot moure la carta a aquesta columna." << endl;
+        }
     }
 }
 

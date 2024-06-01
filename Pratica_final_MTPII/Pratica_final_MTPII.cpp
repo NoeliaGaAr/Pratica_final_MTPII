@@ -1,3 +1,7 @@
+// Noelia Gargallo Arroyo
+// Usuari u1979924
+// Pràctica final MTP2
+
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
@@ -21,11 +25,11 @@ void mostrar_menu() {
 }
 
 void gestionar_menu(Joc& joc) {
-    int opcio;
+    char opcio;
     cout << "OPCIO: ";
     cin >> opcio;
 
-    while (opcio != 9) {
+    while (opcio != 'A') {
 
         if (opcio == 1) {
             joc.obrir_una_carta();
@@ -65,10 +69,10 @@ void gestionar_menu(Joc& joc) {
         }
         else if (opcio == "E") {
             joc.espiarTauler();
-        }
-        else if (opcio == "M") {
-            mostrar_menu();
         }*/
+        else if (opcio == 'M') {
+            mostrar_menu();
+        }
         joc.mostra_estat();
         cout << "OPCIO: ";
         cin >> opcio;
