@@ -31,13 +31,33 @@ void Joc::inicialitzar_joc()
     while (not a_baralla->es_buida()) 
     {
         a_ma->empila(a_baralla->agafa_carta());
+        //cout << "Carta empilada: "; a_ma->cim().mostrar_debug(); cout << endl;
     }
 }
 
 void Joc::mostra_estat() const {
-    cout << "ESTAT DEL JOC" << endl << endl;
-    //cout << "Ma: "; a_ma->cim().mostrar(); 
-    //cout << "Descartades: "; a_descartades->cim().mostrar();
+    cout << "ESTAT DEL JOC" << endl;
+    cout << "               ";
+    //Pila mà cartes
+    Carta c = a_ma->cim();
+    if (!c.es_visible()) {
+        cout << "**";
+    }
+    else {
+        c.mostrar();
+    }
+     c.mostrar(); 
+    //Pila descartades; 
+    Carta d = a_descartades->cim();
+    if (!a_descartades->buida()) {
+        d.revelar();
+        d.mostrar();
+    }
+    else
+    {
+        cout << "";
+    }
+     cout << endl;
     a_tauler->mostra_tauler();
 
     cout << "JOC EN CURS" << endl;
@@ -66,8 +86,8 @@ void Joc::emplenar_tauler()
             a_tauler->posar_carta(j, i, c);
 
             // Debugging
-            c.mostrar_debug();
-            cout << " posada a columna " << i+1 << ", fila " << j+1 << endl;
+            /*c.mostrar_debug();
+            cout << " posada a columna " << i+1 << ", fila " << j+1 << endl;*/
         }
     }
 }
@@ -76,17 +96,25 @@ void Joc::obrir_una_carta() {
     // Comprovar si hi ha cartes a la mà
     if (!a_ma->buida()) {
         // Treure una carta de la mà
-        Carta carta = a_ma->desempila();
-        // Posar la carta sobre la pila de descartades
+        //cout << "Carta al cim: "; a_ma->cim().mostrar_debug(); cout << endl;
+        Carta carta = a_ma->cim();
         a_descartades->empila(carta);
+        a_ma->desempila();
+        /*cout << "------" << endl;
+        cout << "Carta de la ma: "; carta.mostrar_debug(); cout << endl;
+        cout << "------" << endl;*/
+        // Posar la carta sobre la pila de descartades
+        
+
         // Revelar la carta
         carta.revelar();
-        carta.mostrar();
+        //carta.mostrar_debug();
     }
     else {
         // Si la mà està buida, reciclar les cartes de la pila de descartades
         while (!a_descartades->buida()) {
-            Carta carta = a_descartades->desempila();
+            Carta carta = a_ma->cim();
+            a_descartades->desempila();
             carta.amagar(); // Amagar les cartes abans de posar-les a la mà
             a_ma->empila(carta);
         }
@@ -109,7 +137,7 @@ void Joc::posar_cartaMa_tauler(int columnaDesti) {
             if (piles[columnaDesti]->buida() || piles[columnaDesti]->cim().es_visible() == carta.es_visible() &&
                 piles[columnaDesti]->cim().valor() - carta.valor() == 1) {
                 // Movem la carta de la mà a la columna de destí.
-                piles[columnaDesti]->empila(a_descartades->desempila());
+                //piles[columnaDesti]->empila(a_descartades->desempila());
                 cartaValida = true;
             }
         }
@@ -143,7 +171,7 @@ void Joc::posar_cartaMa_pila() {
             // és compatible amb la carta de la pila de destí.
             if (piles[pilaDesti]->buida() || piles[pilaDesti]->cim().valor() - carta.valor() == 1) {
                 // Movem la carta de la mà a la pila de destí.
-                piles[pilaDesti]->empila(a_descartades->desempila());
+                //piles[pilaDesti]->empila(a_descartades->desempila());
             }
             else {
                 cout << "La carta no pot ser posada a la pila corresponent." << endl;

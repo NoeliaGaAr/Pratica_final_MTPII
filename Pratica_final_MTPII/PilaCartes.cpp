@@ -28,21 +28,48 @@ Carta PilaCartes::cim() const {
 
 }
 
+/*Carta* PilaCartes::seg() const {
+    //return a_cim->valor;
+    if (!buida()) {
+        Carta* c = a_cim->seg->valor;
+        return c;
+    }
+    //else { return NULL; }
+
+}*/
+
 void PilaCartes::empila(Carta c) {
     Node* nou = new Node;
-    nou->valor = &c;
+    nou->valor = new Carta(c);//&c
     nou->seg = a_cim;
     a_cim = nou;
 }
 
-Carta PilaCartes::desempila() {
-    Carta carta = *(a_cim->valor);
-    if (!buida()) {
+/*Carta PilaCartes::desempila() {
+
+    if (!buida())
+    {
         Node* aux = a_cim;
+        //Carta c(a_cim->valor->pal(), a_cim->valor->valor(), false);
+        Carta c = *(a_cim->valor);
         a_cim = a_cim->seg;
         delete aux;
-        return carta;
+        return c;
     }
+    else cout << "PILA BUIDA!" << endl;
+}*/
+void PilaCartes::desempila() {
+
+    if (!buida())
+    {
+        Node* aux = a_cim;
+        //Carta c(a_cim->valor->pal(), a_cim->valor->valor(), false);
+        //Carta c = *(a_cim->valor);
+        a_cim = a_cim->seg;
+        delete aux;
+        //return c;
+    }
+    else cout << "PILA BUIDA!" << endl;
 }
 
 PilaCartes& PilaCartes::operator=(const PilaCartes& o) {

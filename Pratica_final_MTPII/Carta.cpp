@@ -41,13 +41,14 @@ bool Carta::tenim_carta() const {
 
 void Carta::mostrar() 
 {
-    if (a_visible) 
+    if (a_visible==true) 
     {
         cout << valor_a_string(a_valor) << pal_a_char(a_pal) << " ";
+
     }
     else 
     {
-        cout << "**";
+        cout << " ";
     }
 }
 

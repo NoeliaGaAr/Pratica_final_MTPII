@@ -2,7 +2,7 @@
 #define TAULER_H
 #include "Carta.h"
 #include "Baralla.h"
-
+#include "PilaCartes.h"
 class Tauler {
 public:
 

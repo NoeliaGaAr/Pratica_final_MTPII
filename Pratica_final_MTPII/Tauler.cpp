@@ -73,7 +73,6 @@ void Tauler::mostra_tauler() const
     // TODO: Fa un espai extra entre "Qc **", fa "Qc  **" i no hauria.
      
     // Mostrar estat del joc
-    cout << "               **" << endl;
     cout << "c1 c2 c3 c4 c5 c6 c7" << endl;
 
     // Recorrem totes les files (0..files-1)
@@ -168,27 +167,7 @@ void Tauler::copia(const Tauler& t) {
 
 
 
-/*Tauler::Tauler() {
-    inicialitzar();
-}
-
-Tauler::~Tauler() {
-    for (int col = 0; col < COLUMNES; ++col) {
-        for (int fila = 0; fila < ocupacio[col]; ++fila) {
-            delete matriu[col][fila];
-        }
-    }
-}
-
-void Tauler::inicialitzar() {
-    for (int col = 0; col < COLUMNES; ++col) {
-        ocupacio[col] = 0;
-        for (int fila = 0; fila < FILES; ++fila) {
-            matriu[col][fila] = nullptr;
-        }
-    }
-}
-
+/*
 void Tauler::repartir(Baralla& baralla) {
     for (int col = 0; col < COLUMNES; ++col) {
         for (int fila = 0; fila <= col; ++fila) {
@@ -201,25 +180,4 @@ void Tauler::repartir(Baralla& baralla) {
         }
     }
 }
-
-void Tauler::mostrar() const {
-    std::cout << "c1 c2 c3 c4 c5 c6 c7" << std::endl;
-    for (int fila = 0; fila < FILES; fila++) {
-        bool filaBuida = true;
-        for (int col = 0; col < COLUMNES; col++) {
-            if (matriu[col][fila]) {
-                matriu[col][fila]->mostrar();
-                filaBuida = false;
-            }
-            else {
-                std::cout << "   ";
-            }
-        }
-        if (filaBuida) break;
-        std::cout << "f" << (fila + 1);
-        if (fila + 1 < 10) {
-            std::cout << " ";
-        }
-        std::cout << std::endl;
-    }
-}*/
+*/

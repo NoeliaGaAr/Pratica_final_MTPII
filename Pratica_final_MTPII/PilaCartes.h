@@ -15,9 +15,10 @@ public:
 
     bool buida() const;
     Carta cim() const;
+    Carta* seg() const;
 
     void empila(Carta c);
-    Carta desempila();
+    void desempila();
     void mostrar() const;
     PilaCartes& operator=(const PilaCartes& o);
 
