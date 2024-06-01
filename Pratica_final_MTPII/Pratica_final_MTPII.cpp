@@ -25,11 +25,11 @@ void mostrar_menu() {
 }
 
 void gestionar_menu(Joc& joc) {
-    char opcio;
+    int opcio;
     cout << "OPCIO: ";
     cin >> opcio;
 
-    while (opcio != 'A') {
+    while (opcio != 8) {
 
         if (opcio == 1) {
             joc.obrir_una_carta();
