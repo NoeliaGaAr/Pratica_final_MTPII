@@ -37,7 +37,19 @@ void Joc::inicialitzar_joc()
 
 void Joc::mostra_estat() const {
     cout << "ESTAT DEL JOC" << endl;
-    cout << "               ";
+    // Mostrem les piles de colls (piles de pals)
+    for (int i = 0; i < 4; ++i) {
+        if (piles[i]->buida()) {
+            cout << "   "; // Espai en blanc per a una pila buida
+        }
+        else {
+            Carta cimPila = piles[i]->cim();
+            cimPila.revelar();
+            cimPila.mostrar();
+            cout << "  ";
+        }
+    }
+    cout << "   ";
     //Pila mà cartes
     Carta c = a_ma->cim();
     if (!c.es_visible()) {
@@ -127,13 +139,14 @@ void Joc::posar_cartaMa_tauler(int columnaDesti) {
         cout << "No hi ha cap carta a la pila de descartades." << endl;
     }
     columnaDesti = columnaDesti - 1;
-    // Obtenim la carta del cim de la pila de descartades
-    Carta carta = a_descartades->cim();
 
     // Comprovem si la columna és vàlida
     if (!a_tauler->columna_valida(columnaDesti)) {
         cout << "La columna indicada no és vàlida." << endl;
     }
+
+    // Obtenim la carta del cim de la pila de descartades
+    Carta carta = a_descartades->cim();
 
     // Comprovem si la carta es pot posar a la columna
     if (a_tauler->columna_buida(columnaDesti)) {
@@ -147,12 +160,12 @@ void Joc::posar_cartaMa_tauler(int columnaDesti) {
         Carta cimColumna = a_tauler->cim_columna(columnaDesti);
 
         // Comprovem si la carta es pot posar a la columna
-        if ((cimColumna.valor() - carta.valor()) == 1 &&
-            ((carta.pal() == 'P' || carta.pal() == 'T') && (cimColumna.pal() == 'c' || cimColumna.pal() == 'd') ||
-                (carta.pal() == 'c' || carta.pal() == 'd') && (cimColumna.pal() == 'P' || cimColumna.pal() == 'T'))) {
+        if ((cimColumna.valor() - carta.valor() == 1) &&
+            (((carta.pal() == 'P' || carta.pal() == 'T') && (cimColumna.pal() == 'c' || cimColumna.pal() == 'd')) ||
+                ((carta.pal() == 'c' || carta.pal() == 'd') && (cimColumna.pal() == 'P' || cimColumna.pal() == 'T')))) {
             a_tauler->afegir_carta(columnaDesti, carta);
-            carta.revelar();
-            if (carta.es_visible()) carta.mostrar();
+            carta.revelar(); // Revelem la carta
+            if (carta.es_visible()) carta.mostrar(); // Mostrem la carta
             a_descartades->desempila();
             cout << "Carta posada a la columna." << endl;
         }
@@ -164,27 +177,30 @@ void Joc::posar_cartaMa_tauler(int columnaDesti) {
 
 void Joc::posar_cartaMa_pila() {
     // Comprovem si la pila de descartades té almenys una carta.
-    if (not a_descartades->buida()) {
+    if (!a_descartades->buida()) {
         // Obtenim la carta del cim de la pila de descartades.
         Carta carta = a_descartades->cim();
 
         // Determinem a quina pila correspon la carta.
         int pilaDesti = -1;
         switch (carta.pal()) {
-            case 'P': pilaDesti = 0; break;  // Piques
-            case 'c': pilaDesti = 1; break;  // Cors
-            case 'd': pilaDesti = 2; break;  // Diamants
-            case 'T': pilaDesti = 3; break;  // Trèvols
-            default: break;
+        case 'P': pilaDesti = 0; break;  // Piques
+        case 'c': pilaDesti = 1; break;  // Cors
+        case 'd': pilaDesti = 2; break;  // Diamants
+        case 'T': pilaDesti = 3; break;  // Trèvols
+        default: break;
         }
 
         // Si la carta pertany a una pila vàlida...
         if (pilaDesti != -1) {
             // Comprovem si la pila de destí està buida o si la carta del cim de la pila de descartades
             // és compatible amb la carta de la pila de destí.
-            if (piles[pilaDesti]->buida() || piles[pilaDesti]->cim().valor() - carta.valor() == 1) {
+            if ((piles[pilaDesti]->buida() && carta.valor() == 1) ||
+                (!piles[pilaDesti]->buida() && piles[pilaDesti]->cim().valor() == carta.valor() - 1)) {
                 // Movem la carta de la mà a la pila de destí.
-                //piles[pilaDesti]->empila(a_descartades->desempila());
+                piles[pilaDesti]->empila(carta);  // Primer empilem la carta a la pila de destí
+                a_descartades->desempila();  // Després eliminem la carta de la pila de descartades
+                cout << "Carta " << carta.valor() << " de " << carta.pal() << " afegida a la pila de " << carta.pal() << "." << endl;
             }
             else {
                 cout << "La carta no pot ser posada a la pila corresponent." << endl;

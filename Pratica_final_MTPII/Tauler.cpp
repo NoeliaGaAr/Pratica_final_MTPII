@@ -163,7 +163,7 @@ bool Tauler::columna_valida(int columna) const {
 
 bool Tauler::columna_buida(int columna) const {
     for (int fila = 0; fila < files; fila++) {
-        if (taula[fila][columna].valor() != 0) { // assuming 0 means no card present
+        if (taula[fila][columna].valor() != 0) {
             return false;
         }
     }
@@ -181,13 +181,13 @@ Carta Tauler::cim_columna(int columna) const {
         fila--;
     }
 
-    if (fila >= 0 && taula[fila][columna].valor() != -1) { // assuming -1 means no card present
+    if (fila >= 0 && taula[fila][columna].valor() != -1) {
         cout << "Trobada carta visible " << taula[fila][columna].valor() << endl;
         return taula[fila][columna];
     }
 
     cout << "Columna buida o sense cartes visibles" << endl;
-    return Carta(); // returning a default card if the column is empty or no visible card found
+    return Carta();
 }
 
 
@@ -196,15 +196,20 @@ void Tauler::afegir_carta(int columna, const Carta& c) {
         cout << "Columna no vàlida!" << endl;
     }
 
-    cout << "Afegint carta a la columna " << columna << endl;
-
-    for (int fila = 0; fila < files; fila++) {
-        cout << "Revisant fila " << fila << ": ";
-        if (taula[fila][columna].valor() == -1) { // assuming -1 means no card present
+    //cout << "Afegint carta a la columna " << columna << endl;
+    int fila= files-1;
+    bool trobat = false; 
+    while(fila>= 0 and !trobat){
+        //cout << "Revisant fila " << fila << ": ";
+        if (taula[fila][columna].es_visible()) {
+            trobat = true;
+            fila++;
             taula[fila][columna] = c;
-            taula[fila][columna].mostrar();
-            cout << "Carta afegida a fila " << fila << endl;
+            taula[fila][columna].revelar(); // Revelar la carta quan es col·loca
+            taula[fila][columna].mostrar(); // Mostrar la carta
+           // cout << "Carta afegida a fila " << fila + 1 << endl;
         }
+        else fila--;
     }
 }
 
